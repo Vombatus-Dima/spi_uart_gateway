@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file           : main.c
@@ -15,50 +14,55 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
 #include "gpio.h"
+#include "printf_dbg.h"
+#include "pin_dbg.h"
+#include "cmd_process.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
 /* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
 /* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
 /* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
 /* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
-void MX_FREERTOS_Init(void);
-/* USER CODE BEGIN PFP */
 
-/* USER CODE END PFP */
+volatile const char __version__[] = "H750VB";
+volatile const char __date__[] = __DATE__;
+volatile const char __time__[] = __TIME__;
 
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
+/**
+ * @brief  Start Thread
+ * @param  None
+ * @retval None
+ */
+void system_thread(void *arg)
+{
 
-/* USER CODE END 0 */
+	/*Initializing hardware debugging */
+    debug_uart_init();
+	debug_pin_init();
+
+	/* program information header     */
+	printf("______________________________________________\r\n");
+	printf("\r\n");
+	printf("   %s \r\n", __version__);
+	printf("   DATA: %s \r\n", __date__);
+	printf("   TIME: %s \r\n", __time__);
+	printf("   CPU FREQ = %.9lu Hz \r\n", SystemCoreClock);
+	printf("______________________________________________\r\n");
+
+
+	//Инициализация задачи диагностического терминала
+	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
+
+	for (;;) {
+		vTaskDelay(1000);
+	}
+}
 
 /**
   * @brief  The application entry point.
@@ -67,52 +71,22 @@ void MX_FREERTOS_Init(void);
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
   /* MPU Configuration--------------------------------------------------------*/
   MPU_Config();
-
   /* MCU Configuration--------------------------------------------------------*/
-
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
   /* Configure the system clock */
   SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
-
-  /* Call init function for freertos objects (in cmsis_os2.c) */
-  MX_FREERTOS_Init();
-
+  /* Init thread */
+  xTaskCreate(system_thread, (const char*)"SysTask", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
   /* Start scheduler */
-  osKernelStart();
-
+  vTaskStartScheduler();
   /* We should never get here as control is now taken by the scheduler */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+  NVIC_SystemReset();
+  return 0;
 }
 
 /**
@@ -178,12 +152,8 @@ void SystemClock_Config(void)
   }
 }
 
-/* USER CODE BEGIN 4 */
 
-/* USER CODE END 4 */
-
- /* MPU Configuration */
-
+/* MPU Configuration */
 void MPU_Config(void)
 {
   MPU_Region_InitTypeDef MPU_InitStruct = {0};

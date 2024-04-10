@@ -53,33 +53,63 @@
   extern uint32_t SystemCoreClock;
   void xPortSysTickHandler(void);
 #endif
-#define configENABLE_FPU                         0
-#define configENABLE_MPU                         0
+#define configENABLE_FPU                                1
+#define configENABLE_MPU                                0
 
-#define configUSE_PREEMPTION                     1
-#define configSUPPORT_STATIC_ALLOCATION          1
-#define configSUPPORT_DYNAMIC_ALLOCATION         1
-#define configUSE_IDLE_HOOK                      0
-#define configUSE_TICK_HOOK                      0
-#define configCPU_CLOCK_HZ                       ( SystemCoreClock )
-#define configTICK_RATE_HZ                       ((TickType_t)1000)
-#define configMAX_PRIORITIES                     ( 7 )
-#define configMINIMAL_STACK_SIZE                 ((uint16_t)128)
-#define configTOTAL_HEAP_SIZE                    ((size_t)15360)
-#define configMAX_TASK_NAME_LEN                  ( 16 )
-#define configUSE_16_BIT_TICKS                   0
-#define configUSE_MUTEXES                        1
-#define configQUEUE_REGISTRY_SIZE                8
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION  1
+#define configUSE_PREEMPTION                            0
+#define configUSE_TICKLESS_IDLE                         0
+#define configCPU_CLOCK_HZ                              ( SystemCoreClock )
+#define configTICK_RATE_HZ                              ((TickType_t)1000)
+#define configMAX_PRIORITIES                            ( 7 )
+#define configMINIMAL_STACK_SIZE                        ((uint16_t)250)
+#define configMAX_TASK_NAME_LEN                         ( 16 )
+#define configUSE_16_BIT_TICKS			                0
+#define configIDLE_SHOULD_YIELD                         0
+#define configUSE_MUTEXES                               1
+#define configUSE_RECURSIVE_MUTEXES                     1
+#define configUSE_COUNTING_SEMAPHORES                   1
+#define configUSE_ALTERNATIVE_API                       0
+#define configQUEUE_REGISTRY_SIZE                       8
+#define configUSE_QUEUE_SETS                            0
+#define configUSE_TIME_SLICING                          0
+#define configUSE_NEWLIB_REENTRANT                      0
+#define configENABLE_BACKWARD_COMPATIBILITY             0
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS         5
 /* USER CODE BEGIN MESSAGE_BUFFER_LENGTH_TYPE */
 /* Defaults to size_t for backward compatibility, but can be changed
    if lengths will always be less than the number of bytes in a size_t. */
 #define configMESSAGE_BUFFER_LENGTH_TYPE         size_t
 /* USER CODE END MESSAGE_BUFFER_LENGTH_TYPE */
 
+/* Memory allocation related definitions. */
+#define configSUPPORT_STATIC_ALLOCATION                 0
+#define configSUPPORT_DYNAMIC_ALLOCATION                1
+#define configTOTAL_HEAP_SIZE			                ( ( size_t ) (  0x0000C000  ) )//48k
+#define configAPPLICATION_ALLOCATED_HEAP                1
+
+/* Hook function related definitions. */
+#define configUSE_IDLE_HOOK                             0
+#define configUSE_TICK_HOOK                             0
+#define configCHECK_FOR_STACK_OVERFLOW                  2
+#define configUSE_MALLOC_FAILED_HOOK                    1
+#define configUSE_DAEMON_TASK_STARTUP_HOOK              0
+
+/* Run time and task stats gathering related definitions. */
+#define configUSE_TRACE_FACILITY                        1		//for DEBUG
+#define configGENERATE_RUN_TIME_STATS                   1		//for DEBUG
+#define configUSE_STATS_FORMATTING_FUNCTIONS            1		//for DEBUG`
+
 /* Co-routine definitions. */
-#define configUSE_CO_ROUTINES                    0
-#define configMAX_CO_ROUTINE_PRIORITIES          ( 2 )
+#define configUSE_CO_ROUTINES                           0
+#define configMAX_CO_ROUTINE_PRIORITIES                 ( 2 )
+
+/* Software timer definitions. */
+#define configUSE_TIMERS                                1
+#define configTIMER_TASK_PRIORITY                       ( 2 )
+#define configTIMER_QUEUE_LENGTH                        10
+#define configTIMER_TASK_STACK_DEPTH                    256
+
+#define configUSE_APPLICATION_TASK_TAG                  0
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
@@ -133,8 +163,29 @@ standard names. */
 
 /* #define xPortSysTickHandler SysTick_Handler */
 
-/* USER CODE BEGIN Defines */
-/* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
-/* USER CODE END Defines */
+  /**
+    * @brief  Функция настройки и запуска таймера,
+    *         который используется для подсчета времени работы задач FreeRTOS
+    *
+    *         Время тика таймера должено быть, по крайней мере в 10 раз меньше
+    *         частоты тика FreeRTOS
+    *
+    * @param  None
+    * @retval None
+    */
+  void vConfigureTimerForRunTimeStats(void);
+
+  #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
+
+  /**
+    * @brief  Функция возращает значения счетчика таймера,
+    *         который используется для подсчета времени работы задач FreeRTOS
+    *
+    * @param  None
+    * @retval unsigned long значение счетчика таймера
+    */
+  unsigned long ulGetRuntimeCounterValue(void);
+
+  #define portGET_RUN_TIME_COUNTER_VALUE() ulGetRuntimeCounterValue()
 
 #endif /* FREERTOS_CONFIG_H */
