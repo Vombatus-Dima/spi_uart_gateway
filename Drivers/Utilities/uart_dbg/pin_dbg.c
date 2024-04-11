@@ -15,7 +15,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "pin_dbg.h"
 
-#if  (DBG_PIN_ENABLE == 1)
+#ifdef DBG_PIN_ENABLE
 /**
   * @brief  Инициализация GPIO для отладки.
   * @param  None
@@ -47,28 +47,8 @@ void debug_pin_init(void)
 	GPIO_InitStruct.Pin       = T4_PIN;
 	HAL_GPIO_Init(T4_PORT, &GPIO_InitStruct);
 	T4_LO;
-
-	T5_CLK_ENABLE();
-	GPIO_InitStruct.Pin       = T5_PIN;
-	HAL_GPIO_Init(T5_PORT, &GPIO_InitStruct);
-	T5_LO;
-	
-	T6_CLK_ENABLE();
-	GPIO_InitStruct.Pin       = T6_PIN;
-	HAL_GPIO_Init(T6_PORT, &GPIO_InitStruct);
-	T6_LO;
-	
-	T7_CLK_ENABLE();
-	GPIO_InitStruct.Pin       = T7_PIN;
-	HAL_GPIO_Init(T7_PORT, &GPIO_InitStruct);
-	T7_LO;
-	
-	T8_CLK_ENABLE();
-	GPIO_InitStruct.Pin       = T8_PIN;
-	HAL_GPIO_Init(T8_PORT, &GPIO_InitStruct);
-	T8_LO;	
 	
 }
 
-#endif  /* (DBG_PIN_ENABLE == 1) */
+#endif  /* DBG_PIN_ENABLE */
 /******************* (C) COPYRIGHT 2020 OneTiOne  *****END OF FILE****/

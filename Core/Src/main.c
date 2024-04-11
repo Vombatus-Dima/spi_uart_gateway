@@ -20,6 +20,8 @@
 #include "printf_dbg.h"
 #include "pin_dbg.h"
 #include "cmd_process.h"
+#include "uart_gate_cntrl.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* Private typedef -----------------------------------------------------------*/
@@ -56,7 +58,9 @@ void system_thread(void *arg)
 	printf("______________________________________________\r\n");
 
 
-	//Инициализация задачи диагностического терминала
+	/* Init uart gate */
+	uartGateCntrlInit();
+	/* Initializing the diagnostic terminal task */
 	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
 
 	for (;;) {
