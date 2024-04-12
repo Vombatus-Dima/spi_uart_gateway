@@ -21,7 +21,7 @@
 #include "pin_dbg.h"
 #include "cmd_process.h"
 #include "uart_gate_cntrl.h"
-
+#include "spi_gate_cntrl.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* Private typedef -----------------------------------------------------------*/
@@ -60,6 +60,9 @@ void system_thread(void *arg)
 
 	/* Init uart gate */
 	uartGateCntrlInit();
+	/* Init spi gate */
+	spiGateCntrlInit();
+
 	/* Initializing the diagnostic terminal task */
 	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
 

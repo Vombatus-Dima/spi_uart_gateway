@@ -50,6 +50,7 @@
 									<listOptionValue builtIn="false" value="../Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/Utilities/uart_dbg"/>
 									<listOptionValue builtIn="false" value="../Drivers/Utilities/uart_gate"/>
+									<listOptionValue builtIn="false" value="../Drivers/Utilities/spi_gate"/>
 									<listOptionValue builtIn="false" value="../Drivers/Utilities/cmd_trmnl"/>
 									<listOptionValue builtIn="false" value="../Drivers/STM32H7xx_HAL_Driver/Inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy"/>

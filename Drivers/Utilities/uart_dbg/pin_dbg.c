@@ -38,15 +38,15 @@ void debug_pin_init(void)
 	HAL_GPIO_Init(T2_PORT, &GPIO_InitStruct);
 	T2_LO;
 	
-	T3_CLK_ENABLE();
-	GPIO_InitStruct.Pin       = T3_PIN;
-	HAL_GPIO_Init(T3_PORT, &GPIO_InitStruct);
-	T3_LO;
+	//T3_CLK_ENABLE();
+	//GPIO_InitStruct.Pin       = T3_PIN;
+	//HAL_GPIO_Init(T3_PORT, &GPIO_InitStruct);
+	//T3_LO;
 	
-	T4_CLK_ENABLE();
-	GPIO_InitStruct.Pin       = T4_PIN;
-	HAL_GPIO_Init(T4_PORT, &GPIO_InitStruct);
-	T4_LO;
+	//T4_CLK_ENABLE();
+	//GPIO_InitStruct.Pin       = T4_PIN;
+	//HAL_GPIO_Init(T4_PORT, &GPIO_InitStruct);
+	//T4_LO;
 	
 }
 
