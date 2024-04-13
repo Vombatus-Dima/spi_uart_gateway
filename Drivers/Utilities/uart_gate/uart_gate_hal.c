@@ -14,7 +14,10 @@
 #include "main.h"
 #include "uart_gate_hal.h"
 #include "stm32h7xx_hal_uart.h"
-#include "pin_dbg.h"
+#include "stm32h7xx_ll_usart.h"
+
+void uartGateRxData(uint8_t data);
+void uartGateTxCpl(void);
 
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
@@ -28,6 +31,10 @@ UART_HandleTypeDef UartHandle;
   */
 void USART6_IRQHandler(void)
 {
+  if ((LL_USART_IsActiveFlag_RXNE(USART6)) & (LL_USART_IsEnabledIT_RXNE(USART6)))
+  {
+	uartGateRxData(LL_USART_ReceiveData8(USART6));
+  }
   HAL_UART_IRQHandler(&UartHandle);
 }
 
@@ -41,6 +48,16 @@ void USART6_IRQHandler(void)
 void DMA2_Stream7_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(UartHandle.hdmatx);
+}
+
+/**
+  * @brief  Tx Transfer completed callback.
+  * @param  huart UART handle.
+  * @retval None
+  */
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+
 }
 
 /**
@@ -105,6 +122,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
   /* NVIC configuration for DMA transfer complete interrupt (USART6_TX) */
   HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 5, 1);
   HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
+
+  LL_USART_EnableIT_RXNE(USART6);
 
   /* NVIC for USART, to catch the TX complete */
   HAL_NVIC_SetPriority(USART6_IRQn, 5, 1);

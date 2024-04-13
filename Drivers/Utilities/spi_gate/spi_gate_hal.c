@@ -14,7 +14,7 @@
 #include "main.h"
 #include "spi_gate_hal.h"
 #include "stm32h7xx_hal_spi.h"
-#include "pin_dbg.h"
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -68,7 +68,7 @@ void DMA2_Stream3_IRQHandler(void)
   */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 {
- T2_LO;T1_HI;
+
 }
 
 /**
@@ -79,7 +79,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
   */
 void HAL_SPI_TxRxHalfCpltCallback(SPI_HandleTypeDef *hspi)
 {
- T2_HI;T1_LO;
+
 }
 
 /**
