@@ -27,15 +27,15 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
-#define T1_CLK_ENABLE()   __HAL_RCC_GPIOC_CLK_ENABLE()
-#define T1_PIN            GPIO_PIN_0
-#define T1_PORT           GPIOC
+#define T1_CLK_ENABLE()   __HAL_RCC_GPIOB_CLK_ENABLE()
+#define T1_PIN            GPIO_PIN_6
+#define T1_PORT           GPIOB
 #define T1_HI             T1_PORT->BSRR = T1_PIN
 #define T1_LO             T1_PORT->BSRR = (uint32_t)T1_PIN << (16U);
 
-#define T2_CLK_ENABLE()   __HAL_RCC_GPIOC_CLK_ENABLE()
-#define T2_PIN            GPIO_PIN_1
-#define T2_PORT           GPIOC
+#define T2_CLK_ENABLE()   __HAL_RCC_GPIOB_CLK_ENABLE()
+#define T2_PIN            GPIO_PIN_7
+#define T2_PORT           GPIOB
 #define T2_HI             T2_PORT->BSRR = T2_PIN
 #define T2_LO             T2_PORT->BSRR = (uint32_t)T2_PIN << (16U);
 

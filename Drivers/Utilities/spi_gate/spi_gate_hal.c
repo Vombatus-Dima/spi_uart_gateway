@@ -25,9 +25,10 @@
 /* SPI handler declaration */
 
 SPI_HandleTypeDef SpiHandle;
-#define BUFF_SIZE 10
-uint8_t spiTxBuf[10] = {1,2,3,4,5,6,7,8,9,0};
-uint8_t spiRxBuf[10] = {1,2,3,4,5,6,7,8,9,0};
+#define BUFF_SIZE 50
+uint8_t spiTxBuf[BUFF_SIZE] =  { 0,0xFF,0xFF,0xAA,0x55,1,2,3,4,5,  6,7,8,9,0,1,2,3,4,5,  6,7,8,9,0,1,2,3,4,5,  6,7,8,9,0,1,2,3,4,5, 6,7,8,9,0,0x55,0xAA,0xFF,0xFF,0};
+
+uint8_t spiRxBuf[BUFF_SIZE] = {0};
 
 static DMA_HandleTypeDef hdma_tx;
 static DMA_HandleTypeDef hdma_rx;
@@ -42,9 +43,7 @@ static DMA_HandleTypeDef hdma_rx;
   */
 void DMA2_Stream2_IRQHandler(void)
 {
-  T1_HI;
   HAL_DMA_IRQHandler(SpiHandle.hdmarx);
-  T1_LO;
 }
 
 /**
@@ -54,24 +53,34 @@ void DMA2_Stream2_IRQHandler(void)
   */
 void DMA2_Stream3_IRQHandler(void)
 {
-  T2_HI;
   HAL_DMA_IRQHandler(SpiHandle.hdmatx);
-  T2_LO;
-}
-
-/**
-  * @brief  This function handles SPIx interrupt request.
-  * @param  None
-  * @retval None
-  */
-void SPI1_IRQHandler(void)
-{
-  //HAL_SPI_IRQHandler(&SpiHandle);
 }
 
 /** @defgroup HAL_MSP_Private_Functions
   * @{
   */
+
+/**
+  * @brief  SPI DMA transfer complete callback.
+  * @param  hspi: pointer to a SPI_HandleTypeDef structure that contains
+  *               the configuration information for SPI module.
+  * @retval None
+  */
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+ T2_LO;T1_HI;
+}
+
+/**
+  * @brief  SPI DMA Half transfer complete callback
+  * @param  hspi: pointer to a SPI_HandleTypeDef structure that contains
+  *               the configuration information for SPI module.
+  * @retval None
+  */
+void HAL_SPI_TxRxHalfCpltCallback(SPI_HandleTypeDef *hspi)
+{
+ T2_HI;T1_LO;
+}
 
 /**
   * @brief SPI MSP Initialization
@@ -83,6 +92,7 @@ void SPI1_IRQHandler(void)
   * @param hspi: SPI handle pointer
   * @retval None
   */
+
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 {
   GPIO_InitTypeDef  GPIO_InitStruct;
@@ -149,6 +159,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     hdma_rx.Init.Mode                = DMA_CIRCULAR;
     hdma_rx.Init.Priority            = DMA_PRIORITY_HIGH;
 
+
     HAL_DMA_Init(&hdma_rx);
 
     /* Associate the initialized DMA handle to the the SPI handle */
@@ -178,7 +189,7 @@ void spiGateHalInit(void)
 	 /*  Configure the SPI peripheral */
 	  /* Set the SPI parameters */
 	  SpiHandle.Instance               = SPI1;
-	  SpiHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+	  SpiHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
 	  SpiHandle.Init.Direction         = SPI_DIRECTION_2LINES;
 	  SpiHandle.Init.CLKPhase          = SPI_PHASE_1EDGE;
 	  SpiHandle.Init.CLKPolarity       = SPI_POLARITY_LOW;
