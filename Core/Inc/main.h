@@ -54,6 +54,7 @@ typedef enum {
 } thread_prio_t;
 
 /* Private defines -----------------------------------------------------------*/
+#define BUFF_SIZE 50
 
 #ifdef __cplusplus
 }

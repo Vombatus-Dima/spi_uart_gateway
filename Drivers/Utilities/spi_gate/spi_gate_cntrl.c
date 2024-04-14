@@ -16,6 +16,7 @@
 #include "spi_gate_hal.h"
 
 TaskHandle_t  spiCntrlHandle;
+
 /**
   * @brief  enumeration notification spi gate
   */
@@ -29,7 +30,7 @@ typedef enum
 QueueHandle_t QueueUartToSpi;
 QueueHandle_t QueueSpiToUart;
 
-#define BUFF_SIZE 50
+
 uint8_t spiTxBuf[2][BUFF_SIZE] = {0};
 uint8_t spiRxBuf[2][BUFF_SIZE] = {0};
 
@@ -80,20 +81,22 @@ void HAL_SPI_TxRxHalfCpltCallback(SPI_HandleTypeDef *hspi)
   */
 void filingTransmitBufSpiDMA(uint8_t* pData)
 {
-	  if (QueueUartToSpi != NULL)
-	  {
-		  if(xQueueReceive(QueueUartToSpi , pData ,0 ) == pdTRUE) return;
-	  }
+	if (QueueUartToSpi != NULL)
+	{
+		if (xQueueReceive(QueueUartToSpi, pData, 0) == pdTRUE)
+		{
+			return;
+		}
+	}
 
-	  for(uint32_t cntic = 0; cntic < BUFF_SIZE; cntic++ )
-	  {
-		  pData[cntic] = 0;
-	  }
+	for (uint32_t cntic = 0; cntic < BUFF_SIZE; cntic++)
+	{
+		pData[cntic] = 0;
+	}
 }
 
 
-bool flagDataNotEmpty = false;
-bool flagReqZero = false;
+
 
 /**
   * @brief  reading receive buffer SPI_DMA
@@ -102,7 +105,9 @@ bool flagReqZero = false;
   */
 void readingReceiveBufSpiDMA(uint8_t* pData)
 {
-	  flagDataNotEmpty = false;
+	bool flagDataNotEmpty = false;
+	bool flagReqZero = false;
+
 	  for(uint32_t cntic = 0; cntic < BUFF_SIZE; cntic++ )
 	  {
 		  if ( pData[cntic] != 0 )
@@ -146,14 +151,14 @@ void spiGateCntrlThread(void *arg)
 	    {
 	    	if( ( NoteValue & NOTE_TRANSFER_CPLT ) != 0 )
 	    	{ /* notification of completion of transfer   */
-	    		filingTransmitBufSpiDMA(spiRxBuf[1]);
-	    		readingReceiveBufSpiDMA(spiTxBuf[1]);
+	    		filingTransmitBufSpiDMA(spiTxBuf[1]);
+	    		readingReceiveBufSpiDMA(spiRxBuf[1]);
 	    	}
 
 	    	if( ( NoteValue & NOTE_TRANSFER_HALF_CPLT ) != 0 )
 	    	{ /* notification of half completion of transfer   */
-	    		filingTransmitBufSpiDMA(spiRxBuf[0]);
-	    		readingReceiveBufSpiDMA(spiTxBuf[0]);
+	    		filingTransmitBufSpiDMA(spiTxBuf[0]);
+	    		readingReceiveBufSpiDMA(spiRxBuf[0]);
 	    	}
 	    }
 	}
@@ -166,7 +171,7 @@ void spiGateCntrlThread(void *arg)
  */
 void spiGateCntrlInit(void)
 {
-	spiGateHalInit((const uint8_t *)spiTxBuf,(uint8_t *)spiRxBuf,BUFF_SIZE*2);
+	spiGateHalInit((const uint8_t *)spiTxBuf,spiRxBuf,BUFF_SIZE*2);
 	xTaskCreate(spiGateCntrlThread, (const char*)"S_cntrl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioHigh, &spiCntrlHandle);
 }
 /******************* (C) COPYRIGHT 2024 *****END OF FILE****/

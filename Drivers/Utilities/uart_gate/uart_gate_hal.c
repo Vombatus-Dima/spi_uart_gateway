@@ -51,16 +51,6 @@ void DMA2_Stream7_IRQHandler(void)
 }
 
 /**
-  * @brief  Tx Transfer completed callback.
-  * @param  huart UART handle.
-  * @retval None
-  */
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-
-}
-
-/**
   * @brief UART MSP Initialization
   *        This function configures the hardware resources used in this example:
   *           - Peripheral's clock enable
