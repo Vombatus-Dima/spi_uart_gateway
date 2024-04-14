@@ -64,7 +64,7 @@ void system_thread(void *arg)
 	spiGateCntrlInit();
 
 	/* Initializing the diagnostic terminal task */
-	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
+	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE, NULL, TreadPrioNormal, NULL);
 
 	for (;;) {
 		vTaskDelay(1000);
@@ -88,7 +88,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* Init thread */
-  xTaskCreate(system_thread, (const char*)"SysTask", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
+  xTaskCreate(system_thread, (const char*)"SysTask", configMINIMAL_STACK_SIZE * 1.5, NULL, TreadPrioNormal, NULL);
   /* Start scheduler */
   vTaskStartScheduler();
   /* We should never get here as control is now taken by the scheduler */
