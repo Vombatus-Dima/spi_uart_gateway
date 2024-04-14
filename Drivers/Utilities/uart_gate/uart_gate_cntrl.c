@@ -62,7 +62,7 @@ void uartGateTxCpl(void)
 }
 
 /**
- * @brief  uart gate control thread
+ * @brief  uart tx gate control thread
  * @param  None
  * @retval None
  */
@@ -87,7 +87,7 @@ void uartGateTxCntrlThread(void *arg)
 }
 
 /**
- * @brief  uart gate control thread
+ * @brief  uart rx gate control thread
  * @param  None
  * @retval None
  */

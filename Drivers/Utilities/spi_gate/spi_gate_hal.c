@@ -15,7 +15,6 @@
 #include "spi_gate_hal.h"
 #include "stm32h7xx_hal_spi.h"
 
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -25,13 +24,9 @@
 /* SPI handler declaration */
 
 SPI_HandleTypeDef SpiHandle;
-#define BUFF_SIZE 50
-uint8_t spiTxBuf[BUFF_SIZE] =  { 0,0xFF,0xFF,0xAA,0x55,1,2,3,4,5,  6,7,8,9,0,1,2,3,4,5,  6,7,8,9,0,1,2,3,4,5,  6,7,8,9,0,1,2,3,4,5, 6,7,8,9,0,0x55,0xAA,0xFF,0xFF,0};
-
-uint8_t spiRxBuf[BUFF_SIZE] = {0};
-
 static DMA_HandleTypeDef hdma_tx;
 static DMA_HandleTypeDef hdma_rx;
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -54,32 +49,6 @@ void DMA2_Stream2_IRQHandler(void)
 void DMA2_Stream3_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(SpiHandle.hdmatx);
-}
-
-/** @defgroup HAL_MSP_Private_Functions
-  * @{
-  */
-
-/**
-  * @brief  SPI DMA transfer complete callback.
-  * @param  hspi: pointer to a SPI_HandleTypeDef structure that contains
-  *               the configuration information for SPI module.
-  * @retval None
-  */
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-
-}
-
-/**
-  * @brief  SPI DMA Half transfer complete callback
-  * @param  hspi: pointer to a SPI_HandleTypeDef structure that contains
-  *               the configuration information for SPI module.
-  * @retval None
-  */
-void HAL_SPI_TxRxHalfCpltCallback(SPI_HandleTypeDef *hspi)
-{
-
 }
 
 /**
@@ -173,18 +142,16 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
 
-    /* NVIC configuration for SPI transfer complete interrupt (SPI1) */
-    //HAL_NVIC_SetPriority(SPI1_IRQn, 5, 0);
-    //HAL_NVIC_EnableIRQ(SPI1_IRQn);
 }
 
 /**
   * @brief configure the UART peripheral
-  *
-  * @param  None
+  * @param  pTxData: pointer to transmission data buffer
+  * @param  pRxData: pointer to reception data buffer
+  * @param  Size   : amount of data to be sent
   * @retval None
   */
-void spiGateHalInit(void)
+void spiGateHalInit(const uint8_t *pTxData, uint8_t *pRxData, uint16_t Size)
 {
 	 /*  Configure the SPI peripheral */
 	  /* Set the SPI parameters */
@@ -211,7 +178,7 @@ void spiGateHalInit(void)
 	  }
 
 	  /* While the SPI */
-	  if(HAL_SPI_TransmitReceive_DMA(&SpiHandle, spiTxBuf, spiRxBuf, BUFF_SIZE) != HAL_OK)
+	  if(HAL_SPI_TransmitReceive_DMA(&SpiHandle, pTxData, pRxData, Size) != HAL_OK)
 	  {
 	    /* Transfer error in transmission process */
 	    Error_Handler();

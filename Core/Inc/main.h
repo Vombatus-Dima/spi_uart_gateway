@@ -28,9 +28,11 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stdio.h"
+#include "stdbool.h"
 #include "stm32h7xx_hal.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/

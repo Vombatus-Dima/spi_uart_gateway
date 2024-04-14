@@ -16,7 +16,14 @@
 #ifndef __SPI_GATE_HAL_H
 #define __SPI_GATE_HAL_H
 
-void spiGateHalInit(void);
+/**
+  * @brief configure the UART peripheral
+  * @param  pTxData: pointer to transmission data buffer
+  * @param  pRxData: pointer to reception data buffer
+  * @param  Size   : amount of data to be sent
+  * @retval None
+  */
+void spiGateHalInit(const uint8_t *pTxData, uint8_t *pRxData, uint16_t Size);
 
 #endif /* __SPI_GATE_CNTRL_H */
 /******************* (C) COPYRIGHT 2024 *****END OF FILE****/
