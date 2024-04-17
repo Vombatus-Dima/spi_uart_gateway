@@ -1,4 +1,4 @@
-# spi_uart_gateway
+﻿# spi_uart_gateway
 
 Tестовое задание:
 
@@ -19,25 +19,3 @@ Tестовое задание:
 4) скорости - на ваше усмотрение
 
 Результат - в виде Github репозитория.
-
-
-
-
-
-
-// Статистика по задачам FreeRTOS
-
-Time work  00:00:00:43:670 ms
-
-FreeHeapMemSize     41872 byte
-
-Number of tasks      7
-
-Number   Name     Pri  FStсk State Time% Time tick
- 1      SysTask    3     102   B    <1%     633
- 2         IDLE    0     137   R    99%     43260742
- 3      Tmr Svc    2     227   B    <1%     8
- 4 UART_TxCntrl    5     105   B    <1%     2375
- 5 UART_RxCntrl    5     113   B    <1%     240190
- 6    SPI_cntrl    5     121   B    <1%     153247
- 7     CmdTrmnl    3      41   X    <1%     12815
